@@ -6,9 +6,14 @@
       </div>
         <div>
          <h2><a href="{% url 'post_detail' pk=post.pk %}">{{post.title}}</a></h2>
+         {% if post.published_date %}
          <p>Published Date :{{post.published_date}}</p>
+         {% else %}
+         <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
+         {% endif %}
          <p>Author :{{post.author}}</p>
          <p>{{post.text|linebreaksbr}}</p>
         </div>
+        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
         
 {% endblock %}
