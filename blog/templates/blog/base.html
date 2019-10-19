@@ -7,13 +7,26 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
             <link rel="stylesheet" href="{% static 'css/blog.css' %}">
             <title>Welcome Kopwer</title>
-            <h1><a href="{% url 'post_list' %}">Kopwer's Blog</a></h1>
-            <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
-    
+        
     </head>
     <body>
+        <div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
+            <a href="{% url 'post_new' %}" class="top-menue"><span class="glyphicon glyphicon-plus"></span></a>
+            <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'logout' %}">Log out</a>)</small></p>
+            {% else %}
+            <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+            {% endif %}
+            <h1><a href="{% url 'post_list' %}">Kopwer's Blog</a></h1>
+
+
+        </div>
+        <div>
        {% block content %}
+
        {% endblock %}
+        </div>
     
     </body>
 </html>

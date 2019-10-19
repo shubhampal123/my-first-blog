@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+   {% if form.errors %}
+   <script type="text/javascript">
+   alert('Your Username Or Password Is Incorrect') ;
+   </script>
+   {% endif %}
+
+   <form method="post" action="{% url 'login' %}">
+   {% csrf_token %}
+
+   <table>
+       <tr>
+           <td>{{ form.username.label_tag }}</td>
+           <td>{{ form.username }}</td>
+       </tr>
+       <tr>
+           <td>{{ form.password.label_tag }}</td>
+           <td>{{ form.password }}</td>
+       </tr>
+   </table>
+
+   <input type="submit" value="login" />
+   <input type="hidden" name="next" value="{{next}}" />
+
+   </form>
+{% endblock %}
