@@ -15,5 +15,20 @@
          <p>{{post.text|linebreaksbr}}</p>
         </div>
         <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="btn btn-default" href="{% url 'add_comment' pk=post.pk %}"><span >Add  a Comment</span></a>
+        <br><br>
+        <span>Comments</span>
+        <br><br>
+        {% for comment in comments %}
+       
+        <p><span>Author :{{comment.author}}</span></p>
+        <p><span>{{comment.created_date}}</span></p>
+        
+        <p>&quot;{{comment.text|linebreaksbr}}&quot;</p>
+        
+        <br>
+        
+        
+        {% endfor %}
         
 {% endblock %}

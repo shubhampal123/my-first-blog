@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from .models import Post
+from .models import Comment
 from django.utils import timezone
 from .forms import PostForm
+from .forms import CommentForm
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -13,7 +15,8 @@ def post_list(request):
 
 def post_detail(request,pk):
     post=get_object_or_404(Post,pk=pk)
-    return render(request,'blog/post_detail.html',{'post':post})
+    comments=Comment.objects.filter(post=pk).order_by('created_date')
+    return render(request,'blog/post_detail.html',{'post':post,'comments':comments})
 
 @login_required
 def post_new(request):
@@ -30,7 +33,25 @@ def post_new(request):
 
 
     return render(request,'blog/add_post.html',{'form':form})
-    
+
+@login_required
+def add_comment(request,pk):
+    post=get_object_or_404(Post,pk=pk)
+    if request.method == "POST":
+       form=CommentForm(request.POST)
+       if form.is_valid():
+          comment=form.save(commit=False)
+          comment.author=request.user
+          comment.post=post     
+          #comment.approve() 
+          comment.published_date=timezone.now()
+          comment.save()
+          return redirect('post_detail',pk=post.pk) 
+
+    else:
+        form=CommentForm() 
+
+    return render(request,'blog/add_comment.html',{'form':form})  
 @login_required
 def post_edit(request,pk):
     post=get_object_or_404(Post,pk=pk)
@@ -56,15 +77,31 @@ def post_draft_list(request):
 @login_required
 def post_publish(request,pk):
     post=get_object_or_404(Post,pk=pk)
-    post.publish()
-    return redirect('post_detail',pk=pk) 
+    a=request.user 
+    b=post.author 
+    if a==b:
+       post.publish()
+       return redirect('post_list')
+    else:
+       return redirect('post_detail',pk=pk) 
 
 @login_required
 def post_remove(request,pk):
     post=get_object_or_404(Post,pk=pk)
-    post.delete()
-    return redirect('post_list')
+    a=request.user 
+    b=post.author 
+    if a==b:
+       post.delete()
+       return redirect('post_list')
+    else:
+       return redirect('post_detail',pk=pk) 
+       
+    
+    
 
+    
+
+       
 
 
 
