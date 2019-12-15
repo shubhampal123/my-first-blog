@@ -13,6 +13,7 @@ def post_list(request):
     posts=Post.objects.filter(published_date__isnull=False).order_by('-published_date')
     return render(request,'blog/post_list.html',{'posts':posts})
 
+
 def post_detail(request,pk):
     post=get_object_or_404(Post,pk=pk)
     comments=Comment.objects.filter(post=pk).order_by('created_date')
@@ -52,6 +53,7 @@ def add_comment(request,pk):
         form=CommentForm() 
 
     return render(request,'blog/add_comment.html',{'form':form})  
+
 @login_required
 def post_edit(request,pk):
     post=get_object_or_404(Post,pk=pk)
